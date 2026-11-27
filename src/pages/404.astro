@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IconOutline from '../components/IconOutline.astro';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page that you asked for does not exist or has moved."
+  noindex
+>
+  <section class="panel not-found-panel" aria-labelledby="not-found-title">
+    <IconOutline class="not-found-art" />
+
+    <p class="not-found-code">404</p>
+    <h1 class="not-found-title" id="not-found-title">Page not found</h1>
+    <p class="not-found-text">The page you are looking for does not exist or has moved.</p>
+
+    <div class="not-found-actions">
+      <md-filled-button href="/">
+        <span class="material-symbols-rounded" slot="icon" aria-hidden="true">home</span>
+        Go to Home
+      </md-filled-button>
+      <md-text-button href="/faq/">Read the FAQ</md-text-button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding-block: 64px;
+    text-align: center;
+  }
+
+  .not-found-panel :global(.not-found-art) {
+    width: 96px;
+    height: 96px;
+    fill: none;
+    stroke: var(--md-sys-color-outline-variant);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .not-found-code {
+    margin-top: 24px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    font-weight: 500;
+  }
+
+  .not-found-title {
+    margin-top: 4px;
+    font-size: var(--md-sys-typescale-headline-large-size);
+    line-height: var(--md-sys-typescale-headline-large-line-height);
+    font-weight: 500;
+  }
+
+  .not-found-text {
+    max-width: 44ch;
+    margin-top: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+  }
+
+  .not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 32px;
+  }
+
+  .not-found-actions md-filled-button .material-symbols-rounded {
+    font-size: 18px;
+    line-height: 1;
+  }
+</style>

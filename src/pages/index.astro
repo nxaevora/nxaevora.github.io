@@ -1,14 +1,481 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import IconOutline from '../components/IconOutline.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
 ---
 
 <BaseLayout
   title="NXAevora"
   description="NXAevora runs Pokemon Legends Arceus natively on Windows. The game code is compiled ahead of time with ScarletNX, a static recompiler."
 >
-  <section class="panel">
-    <h1>NXAevora</h1>
-    <!-- placeholder -->
-    <p>This page is a placeholder for the home page.</p>
+  <aside class="alpha-notice" aria-label="Project state">
+    <span class="material-symbols-rounded alpha-icon" aria-hidden="true">warning</span>
+    <div class="alpha-body">
+      <p class="alpha-title">Alpha: not ready for general use</p>
+      <p class="alpha-text">NXAevora is in alpha. Builds, settings and steps can change at any time.</p>
+    </div>
+  </aside>
+
+  <section class="panel hero-panel">
+    <div class="hero-copy">
+      <h1><span class="hl-primary">NXAevora</span> runs Pokemon Legends Arceus <span class="hl-red">natively</span></h1>
+      <p class="hero-lede">The game code is compiled ahead of time with ScarletNX, a static recompiler. No emulator runs at play time.</p>
+      <div class="hero-actions">
+        <md-outlined-button trailing-icon href="https://github.com/nxaevora/nxaevora-main/blob/main/docs/build/engine-build.md">
+          <span class="material-symbols-rounded" slot="icon" aria-hidden="true">chevron_right</span>
+          Read the build steps
+        </md-outlined-button>
+        <md-text-button href="https://github.com/nxaevora/nxaevora-main">View on GitHub</md-text-button>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <IconOutline />
+    </div>
   </section>
+
+  <div class="panel-row">
+    <section class="panel stats-panel" aria-labelledby="stats-title">
+      <h2 id="stats-title">The project</h2>
+      <dl class="stat-list">
+        <div>
+          <dt>contributors</dt>
+          <dd class="stat-value">2</dd>
+        </div>
+        <div>
+          <dt>commits to the <a href="https://github.com/nxaevora/nxaevora-main/commits/main/">main repository</a></dt>
+          <!-- The page reads the live count from the GitHub API. The number here is the count on 2026-11-27, shown when the API does not answer. -->
+          <dd class="stat-value" id="commit-count">1,165</dd>
+        </div>
+      </dl>
+    </section>
+
+    <figure class="shot-panel">
+      <img
+        src="/images/nxaevora-footage.webp"
+        width="1920"
+        height="1080"
+        loading="lazy"
+        decoding="async"
+        alt="The NXAevora Engine menu on Windows 11, with the Graphics settings open"
+      />
+    </figure>
+  </div>
+
+  <section class="panel" aria-labelledby="now-title">
+    <div class="section-head">
+      <h2 id="now-title">Working now</h2>
+      <a class="text-link" href="/features/">All features<span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
+    </div>
+    <ul class="row-list">
+      <li>
+        <div>
+          <span class="row-title">Native NVN processing</span>
+          <span class="row-detail">Bypasses the command stream of the library. Complete, in maintenance.</span>
+        </div>
+        <span class="tag tag-implemented">Implemented</span>
+      </li>
+      <li>
+        <div>
+          <span class="row-title">FXAA and SMAA anti-aliasing</span>
+        </div>
+        <span class="tag tag-implemented">Implemented</span>
+      </li>
+      <li>
+        <div>
+          <span class="row-title">Bilinear and bicubic scaling</span>
+        </div>
+        <span class="tag tag-implemented">Implemented</span>
+      </li>
+    </ul>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="panel" aria-labelledby="blog-title">
+        <h2 id="blog-title">Latest posts</h2>
+        {posts.map((post) => {
+          const iso = post.data.date.toISOString().slice(0, 10);
+          return (
+            <a class="post-item" href={`/blog/${post.id}/`}>
+              <span class="post-date"><time datetime={iso}>{iso}</time></span>
+              <span class="post-title">{post.data.title}</span>
+            </a>
+          );
+        })}
+      </section>
+    )
+  }
 </BaseLayout>
+
+<script>
+  // Live commit count of the main repository: one commit per page, so the page number of rel="last" is the count.
+  const commitCount = document.getElementById('commit-count');
+
+  const showCommitCount = (count: number): void => {
+    if (commitCount) commitCount.textContent = count.toLocaleString('en-US');
+  };
+
+  const readCommitCount = async (): Promise<void> => {
+    const key = 'nx-commit-count';
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(key) ?? 'null') as
+        | { count: number; time: number }
+        | null;
+      if (cached && Date.now() - cached.time < 10 * 60 * 1000) {
+        showCommitCount(cached.count);
+        return;
+      }
+    } catch {
+      // Storage is not available: read the API.
+    }
+
+    try {
+      const response = await fetch(
+        'https://api.github.com/repos/nxaevora/nxaevora-main/commits?per_page=1&sha=main',
+        { headers: { Accept: 'application/vnd.github+json' } },
+      );
+      if (!response.ok) return;
+      const link = response.headers.get('Link') ?? '';
+      const match = link.match(/[?&]page=(\d+)>;\s*rel="last"/);
+      const count = match ? Number(match[1]) : ((await response.json()) as unknown[]).length;
+      showCommitCount(count);
+      try {
+        sessionStorage.setItem(key, JSON.stringify({ count, time: Date.now() }));
+      } catch {
+        // Storage is not available: the count is not cached.
+      }
+    } catch {
+      // Network error: keep the number in the HTML.
+    }
+  };
+
+  void readCommitCount();
+</script>
+
+<style>
+  .alpha-notice {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-left: 3px solid var(--nx-color-red);
+    border-radius: var(--md-sys-shape-corner-small);
+    background: var(--nx-color-alert-container);
+    color: var(--nx-color-on-alert-container);
+  }
+
+  .alpha-icon {
+    flex: 0 0 auto;
+    font-size: 24px;
+    color: var(--md-sys-color-error);
+  }
+
+  .alpha-title {
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: 700;
+    color: var(--md-sys-color-error);
+  }
+
+  .alpha-text {
+    margin-top: 2px;
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+  }
+
+  .hero-panel {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.6fr);
+    align-items: center;
+    gap: 32px;
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-panel h1 {
+    font-size: var(--md-sys-typescale-display-medium-size);
+    line-height: var(--md-sys-typescale-display-medium-line-height);
+    font-weight: 500;
+    letter-spacing: -0.015625rem;
+    text-wrap: balance;
+  }
+
+  .hl-primary {
+    color: var(--md-sys-color-primary);
+  }
+
+  .hl-red {
+    color: var(--nx-color-red);
+  }
+
+  .hero-lede {
+    max-width: 46ch;
+    margin-top: 16px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 28px;
+  }
+
+  .hero-actions md-outlined-button {
+    --md-outlined-button-icon-size: 18px;
+  }
+
+  .hero-actions md-outlined-button .material-symbols-rounded {
+    font-size: 18px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-art {
+    position: relative;
+    align-self: stretch;
+    min-height: 300px;
+  }
+
+  .hero-art :global(svg) {
+    position: absolute;
+    top: -80px;
+    right: -120px;
+    width: 440px;
+    height: 440px;
+    fill: none;
+    stroke: var(--md-sys-color-outline-variant);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 900px) {
+    .hero-art {
+      display: none;
+    }
+
+    .hero-panel {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero-panel h1 {
+      font-size: var(--md-sys-typescale-display-small-size);
+      line-height: var(--md-sys-typescale-display-small-line-height);
+      letter-spacing: 0;
+    }
+  }
+
+  .panel-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  @media (max-width: 760px) {
+    .panel-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .shot-panel {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  .shot-panel img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .stat-list {
+    display: grid;
+    gap: 28px;
+    margin: 24px 0 0;
+  }
+
+  .stat-list div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .stat-list dt {
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: 1.5;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .stat-list dt a {
+    color: var(--md-sys-color-primary);
+  }
+
+  .stat-value {
+    margin: 0;
+    font-size: 57px;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.25px;
+    font-variant-numeric: tabular-nums;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  @media (max-width: 600px) {
+    .stat-value {
+      font-size: 45px;
+    }
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px 24px;
+    flex-wrap: wrap;
+  }
+
+  .text-link {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--md-sys-color-primary);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    font-weight: 500;
+    text-decoration: none;
+    text-underline-offset: 3px;
+  }
+
+  .text-link .material-symbols-rounded {
+    font-size: 18px;
+  }
+
+  .text-link:hover {
+    text-decoration: underline;
+  }
+
+  .text-link::after,
+  .post-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: transparent;
+    pointer-events: none;
+    transition: background-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+  }
+
+  .text-link:hover::after,
+  .post-item:hover::after {
+    background: var(--nx-state-hover);
+  }
+
+  .text-link:focus-visible::after,
+  .post-item:focus-visible::after {
+    background: var(--nx-state-focus);
+  }
+
+  .text-link:active::after,
+  .post-item:active::after {
+    background: var(--nx-state-pressed);
+  }
+
+  .row-list {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .row-list > li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 4px 24px;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .row-list > li:last-child {
+    border-bottom: 0;
+  }
+
+  .row-title {
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: 500;
+  }
+
+  .row-detail {
+    display: block;
+    max-width: 66ch;
+    margin-top: 2px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+  }
+
+  .post-item {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 4px 16px;
+    margin-top: 20px;
+    padding-block: 16px 4px;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    text-decoration: none;
+  }
+
+  .post-date {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .post-title {
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .post-title {
+      grid-column: 1 / -1;
+      margin-top: 4px;
+    }
+  }
+
+  .post-item:hover .post-title {
+    color: var(--md-sys-color-primary);
+  }
+</style>
