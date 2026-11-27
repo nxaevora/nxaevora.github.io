@@ -25,6 +25,7 @@ nxaevora.github.io/
     content/blog/   blog posts in Markdown
     styles/         theme tokens and global styles
     scripts/        client scripts (Material Web components)
+    data/           site data, such as the feature list
   public/           files served as they are
     images/         logos and icons
   mockups/          design mockups, kept for reference

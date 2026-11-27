@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { features, statusLabels } from '../data/features';
+---
+
+<BaseLayout
+  title="Features"
+  description="What NXAevora does now, what is experimental, and what is planned for the native PC port of Pokemon Legends Arceus."
+>
+  <section class="panel features-panel" aria-labelledby="features-title">
+    <h1 class="page-title" id="features-title">Features</h1>
+    <p class="page-lede">Each feature has its state from the main repository.</p>
+
+    <md-chip-set class="filter-bar" aria-label="Filter features by state">
+      <md-filter-chip label="All" data-filter="all" selected></md-filter-chip>
+      <md-filter-chip label="Implemented" data-filter="implemented"></md-filter-chip>
+      <md-filter-chip label="Experimental" data-filter="experimental"></md-filter-chip>
+      <md-filter-chip label="Planned" data-filter="planned"></md-filter-chip>
+    </md-chip-set>
+
+    <p class="visually-hidden" role="status" id="filter-status"></p>
+
+    <ul class="row-list feature-list">
+      {
+        features.map((feature) => (
+          <li data-state={feature.status}>
+            <div>
+              <span class="row-title">{feature.title}</span>
+              {feature.detail && <span class="row-detail">{feature.detail}</span>}
+            </div>
+            <span class={`tag tag-${feature.status}`}>{statusLabels[feature.status]}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="section-note">
+      Plans for the native port are in the <a class="inline-link" href="https://github.com/nxaevora/nxaevora-main/blob/main/ROADMAP.md">roadmap</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  interface FilterChipElement extends HTMLElement {
+    selected: boolean;
+  }
+
+  const chips = document.querySelectorAll<FilterChipElement>('.filter-bar md-filter-chip');
+  const rows = document.querySelectorAll<HTMLElement>('.feature-list > li');
+  const status = document.getElementById('filter-status');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const showState = (state: string): void => {
+    rows.forEach((row) => {
+      row.hidden = state !== 'all' && row.dataset.state !== state;
+    });
+  };
+
+  const setRowNames = (on: boolean): void => {
+    rows.forEach((row, index) => {
+      if (on) {
+        row.style.setProperty('view-transition-name', `feature-row-${index + 1}`);
+      } else {
+        row.style.removeProperty('view-transition-name');
+      }
+    });
+  };
+
+  let currentTransition: ViewTransition | null = null;
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((other) => {
+        other.selected = other === chip;
+      });
+
+      const state = chip.dataset.filter ?? 'all';
+      if (status) {
+        status.textContent =
+          state === 'all'
+            ? 'All features are visible.'
+            : `Features with the state ${chip.getAttribute('label') ?? ''} are visible.`;
+      }
+
+      if (!('startViewTransition' in document) || reduceMotion.matches) {
+        showState(state);
+        return;
+      }
+
+      setRowNames(true);
+      document.documentElement.classList.add('is-filtering');
+      const transition = document.startViewTransition(() => showState(state));
+      currentTransition = transition;
+      void transition.finished.finally(() => {
+        // A newer click started its own transition: leave its row names and class in place.
+        if (currentTransition !== transition) return;
+        currentTransition = null;
+        setRowNames(false);
+        document.documentElement.classList.remove('is-filtering');
+      });
+    });
+  });
+</script>
+
+<style>
+  .filter-bar {
+    margin-top: 24px;
+  }
+
+  .feature-list {
+    margin-top: 16px;
+  }
+</style>
+
+<style is:global>
+  html.is-filtering .site-header,
+  html.is-filtering .page-bg,
+  html.is-filtering main,
+  html.is-filtering .nav-indicator,
+  html.is-filtering .primary-nav a {
+    view-transition-name: none;
+  }
+
+  html.is-filtering::view-transition-group(*) {
+    animation-duration: var(--md-sys-motion-duration-medium1);
+    animation-timing-function: var(--md-sys-motion-easing-emphasized);
+  }
+
+  html.is-filtering::view-transition-old(*) {
+    animation-name: nx-fade-out;
+    animation-duration: var(--md-sys-motion-duration-short2);
+    animation-timing-function: var(--md-sys-motion-easing-emphasized-accelerate);
+    animation-fill-mode: both;
+  }
+
+  html.is-filtering::view-transition-new(*) {
+    animation-name: nx-fade-in;
+    animation-duration: var(--md-sys-motion-duration-short4);
+    animation-delay: var(--md-sys-motion-duration-short2);
+    animation-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
+    animation-fill-mode: both;
+  }
+
+  html.is-filtering::view-transition-old(root) {
+    display: none;
+  }
+
+  html.is-filtering::view-transition-new(root) {
+    animation: none;
+    opacity: 1;
+  }
+
+  @keyframes nx-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>

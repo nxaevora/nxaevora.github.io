@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Download"
+  description="NXAevora has no release yet. Read the requirements, the planned Tauri launcher and the build guide for the native PC port of Pokemon Legends Arceus."
+>
+  <section class="panel download-panel" aria-labelledby="download-title">
+    <div class="section-head">
+      <h1 class="page-title" id="download-title">Download</h1>
+      <span class="tag tag-neutral">Coming soon</span>
+    </div>
+    <p class="page-lede">No release exists yet.</p>
+
+    <div class="download-actions">
+      <md-filled-button disabled>
+        <span class="material-symbols-rounded" slot="icon" aria-hidden="true">download</span>
+        Coming soon
+      </md-filled-button>
+      <md-text-button href="https://github.com/nxaevora/nxaevora-main/releases">
+        Watch releases on GitHub
+      </md-text-button>
+    </div>
+  </section>
+
+  <section class="panel requirements-panel" aria-labelledby="requirements-title">
+    <h2 id="requirements-title">Requirements</h2>
+    <ul class="row-list req-list">
+      <li>
+        <div>
+          <span class="row-title">Windows 11 x64</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="row-title">A GPU with Vulkan 1.3 support</span>
+        </div>
+      </li>
+      <li>
+        <div>
+          <span class="row-title">Decrypted game sources, base game and v1.1.1 update</span>
+          <span class="row-detail">RomFS, ExeFS and control.nacp, dumped from your own copy.</span>
+        </div>
+      </li>
+    </ul>
+    <p class="section-note">NXAevora contains no game files. Do not ask for them and do not share them.</p>
+  </section>
+
+  <section class="panel launcher-panel" aria-labelledby="launcher-title">
+    <div class="section-head">
+      <h2 id="launcher-title">The launcher</h2>
+      <span class="tag tag-planned">Planned</span>
+    </div>
+    <p class="page-lede">A separate launcher made with Tauri.</p>
+
+    <div class="launcher-grid">
+      <ol class="launch-steps">
+        <li>
+          <span class="step-title">Choose the game folders</span>
+          <span class="step-detail">You select the decrypted ExeFS and RomFS folders. The launcher never copies or uploads them.</span>
+        </li>
+        <li>
+          <span class="step-title">Check the files</span>
+          <span class="step-detail">The launcher checks the game files and the mod folder.</span>
+        </li>
+        <li>
+          <span class="step-title">Recompile and start</span>
+          <span class="step-detail">The launcher starts the recompile, shows its progress, then starts the game.</span>
+        </li>
+      </ol>
+
+      <dl class="launch-facts">
+        <div>
+          <dt>Settings</dt>
+          <dd>Language, resolution and input.</dd>
+        </div>
+        <div>
+          <dt>Mods</dt>
+          <dd>Mods are managed from the launcher.</dd>
+        </div>
+        <div>
+          <dt>Runtime DLLs</dt>
+          <dd>They ship with the launcher, so no other tool must be installed.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="panel build-panel" aria-labelledby="build-title">
+    <h2 id="build-title">Build it yourself now</h2>
+    <p class="section-note">Windows, MSYS2 and the CLANG64 environment. <a class="inline-link" href="https://github.com/nxaevora/nxaevora-main/blob/main/docs/build/engine-build.md">Open the build guide</a></p>
+  </section>
+
+  <section class="panel legal-panel" aria-labelledby="legal-title">
+    <h2 id="legal-title">Legal notes</h2>
+    <p class="section-note">You must own the game to use NXAevora. NXAevora does not give game files.</p>
+    <a class="text-link legal-link" href="/legal/">Legal</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .download-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 28px;
+  }
+
+  .download-panel .tag {
+    align-self: center;
+  }
+
+  .legal-link {
+    margin-top: 12px;
+  }
+
+  .download-actions md-filled-button .material-symbols-rounded {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .req-list {
+    margin-top: 24px;
+  }
+
+  .launcher-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 32px;
+    margin-top: 24px;
+  }
+
+  .launch-steps {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  .launch-steps > li {
+    padding-left: 6px;
+  }
+
+  .launch-steps > li::marker {
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
+  }
+
+  .step-title {
+    display: block;
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: 500;
+  }
+
+  .step-detail {
+    display: block;
+    max-width: 60ch;
+    margin-top: 2px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+  }
+
+  .launch-facts {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    margin: 0;
+  }
+
+  .launch-facts dt {
+    font-size: var(--md-sys-typescale-title-small-size);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    font-weight: 500;
+  }
+
+  .launch-facts dd {
+    margin: 2px 0 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+  }
+
+  @media (max-width: 760px) {
+    .launcher-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+</style>
