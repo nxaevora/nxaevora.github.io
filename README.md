@@ -22,18 +22,23 @@ nxaevora.github.io/
     pages/          one file for each page of the site
     layouts/        page layouts shared by the pages
     components/     reusable UI components
-    content/news/   news posts in Markdown
+    content/blog/   blog posts in Markdown
     styles/         theme tokens and global styles
+    scripts/        client scripts (Material Web components)
   public/           files served as they are
-    images/         logos, banner, icons
-    fonts/          web fonts
+    images/         logos and icons
   mockups/          design mockups, kept for reference
   .github/workflows/  build and deploy workflow
 ```
 
 ## Development
 
-The site is not set up yet. The commands to install, run and build it will be added here.
+```sh
+npm ci
+npm run dev
+npm run build
+npm run preview
+```
 
 ## Contributing
 
