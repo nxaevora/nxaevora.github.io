@@ -571,9 +571,14 @@ md-icon-button {
   flex-wrap: wrap;
 }
 
-.text-link {
+.text-link,
+.faq-question,
+.get-row {
   position: relative;
   isolation: isolate;
+}
+
+.text-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -593,7 +598,9 @@ md-icon-button {
   text-decoration: underline;
 }
 
-.text-link::after {
+.text-link::after,
+.faq-question::after,
+.get-row::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -604,16 +611,28 @@ md-icon-button {
   transition: background-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
 }
 
-.text-link:hover::after {
+.text-link:hover::after,
+.faq-question:hover::after,
+.get-row:hover::after {
   background: var(--nx-state-hover);
 }
 
-.text-link:focus-visible::after {
+.text-link:focus-visible::after,
+.faq-question:focus-visible::after,
+.get-row:focus-visible::after {
   background: var(--nx-state-focus);
 }
 
-.text-link:active::after {
+.text-link:active::after,
+.faq-question:active::after,
+.get-row:active::after {
   background: var(--nx-state-pressed);
+}
+
+.faq-question:focus-visible,
+.get-row:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
 }
 
 .inline-link {

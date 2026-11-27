@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Community"
+  description="How to report a bug, suggest a change and read the contributing guide for NXAevora, and the people who develop it on GitHub."
+>
+  <section class="panel" aria-labelledby="community-title">
+    <h1 class="page-title" id="community-title">Community</h1>
+    <p class="page-lede">NXAevora is developed in the open on GitHub.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="involved-title">
+    <h2 id="involved-title">Get involved</h2>
+    <ul class="get-list">
+      <li>
+        <a class="get-row" href="https://github.com/nxaevora/nxaevora-main/issues/new/choose">
+          <span class="material-symbols-rounded get-icon" aria-hidden="true">bug_report</span>
+          <div>
+            <span class="row-title">Report a bug</span>
+            <span class="row-detail">Found a bug the developers do not know about? Open an issue.</span>
+          </div>
+          <span class="material-symbols-rounded get-arrow" aria-hidden="true">arrow_forward</span>
+        </a>
+      </li>
+      <li>
+        <a class="get-row" href="https://github.com/nxaevora/nxaevora-main/pulls">
+          <span class="material-symbols-rounded get-icon" aria-hidden="true">fork_right</span>
+          <div>
+            <span class="row-title">Suggest a change</span>
+            <span class="row-detail">Have a suggestion about the code? Send a pull request.</span>
+          </div>
+          <span class="material-symbols-rounded get-arrow" aria-hidden="true">arrow_forward</span>
+        </a>
+      </li>
+      <li>
+        <a class="get-row" href="https://github.com/nxaevora/nxaevora-main/blob/main/CONTRIBUTING.md">
+          <span class="material-symbols-rounded get-icon" aria-hidden="true">menu_book</span>
+          <div>
+            <span class="row-title">Read the contributing guide</span>
+            <span class="row-detail">Read CONTRIBUTING before you start.</span>
+          </div>
+          <span class="material-symbols-rounded get-arrow" aria-hidden="true">arrow_forward</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="developers-title">
+    <h2 id="developers-title">Developers</h2>
+    <ul class="dev-grid">
+      <li class="dev-card">
+        <img class="dev-avatar" src="https://github.com/Azuloma.png?size=160" alt="" width="64" height="64" loading="lazy" />
+        <div>
+          <h3 class="dev-name">Azunel</h3>
+          <p class="dev-role">Project owner and one of the main developers. Works on the native path, the launcher and the refactor of the code.</p>
+        </div>
+        <a class="text-link" href="https://github.com/Azuloma" aria-label="GitHub profile of Azunel">GitHub profile<span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
+      </li>
+      <li class="dev-card">
+        <img class="dev-avatar" src="https://github.com/colardocookie.png?size=160" alt="" width="64" height="64" loading="lazy" />
+        <div>
+          <h3 class="dev-name">colardocookie</h3>
+          <p class="dev-role">Works on patches that improve the game quality, such as accurate dynamic FPS and research into motion vectors.</p>
+        </div>
+        <a class="text-link" href="https://github.com/colardocookie" aria-label="GitHub profile of colardocookie">GitHub profile<span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="source-title">
+    <h2 id="source-title">Source code</h2>
+    <p class="section-note">NXAevora is free software under the GNU General Public License, version 3 or later.</p>
+    <a class="text-link source-link" href="https://github.com/nxaevora/nxaevora-main">Open the repository<span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</BaseLayout>
+
+<style>
+  .get-list {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .get-list > li {
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .get-list > li:last-child {
+    border-bottom: 0;
+  }
+
+  .get-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 4px 16px;
+    padding-block: 18px;
+    border-radius: var(--md-sys-shape-corner-small);
+    color: var(--md-sys-color-on-surface);
+    text-decoration: none;
+  }
+
+  .get-icon {
+    color: var(--md-sys-color-primary);
+  }
+
+  .get-arrow {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .get-row:hover .get-arrow {
+    color: var(--md-sys-color-primary);
+  }
+
+  .dev-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dev-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background: var(--md-sys-color-surface-container);
+  }
+
+  .dev-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-surface-container-high);
+  }
+
+  .dev-name {
+    font-size: var(--md-sys-typescale-title-large-size);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    font-weight: 500;
+  }
+
+  .dev-role {
+    margin-top: 4px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+  }
+
+  .source-link {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .dev-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { faqItems } from '../data/faq';
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Answers about the game files, the supported systems, the game version and the project of NXAevora."
+>
+  <section class="panel" aria-labelledby="faq-title">
+    <h1 class="page-title" id="faq-title">FAQ</h1>
+    <p class="page-lede">Short answers about the game files and the project.</p>
+  </section>
+
+  <section class="panel" aria-label="Frequently asked questions">
+    <div class="faq-list">
+      {
+        faqItems.map((item, index) => (
+          <details class="faq-item" id={item.id} open={index === 0}>
+            <summary class="faq-question">
+              <span class="faq-question-text">{item.question}</span>
+              <span class="material-symbols-rounded faq-icon" aria-hidden="true">expand_more</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                {item.answer.map((part) =>
+                  typeof part === 'string' ? (
+                    part
+                  ) : (
+                    <a class="inline-link" href={part.href}>{part.text}</a>
+                  )
+                )}
+              </p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+
+    <p class="faq-more">
+      Your question is not here? <a class="inline-link" href="https://github.com/nxaevora/nxaevora-main/issues">Open an issue on GitHub</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  const openQuestionFromHash = (): void => {
+    const raw = window.location.hash.slice(1);
+    let id = raw;
+    try {
+      id = decodeURIComponent(raw);
+    } catch {
+      // A bad escape in the hash: use the raw text.
+    }
+    const item = id ? document.getElementById(id) : null;
+    if (item instanceof HTMLDetailsElement) item.open = true;
+  };
+
+  openQuestionFromHash();
+  window.addEventListener('hashchange', openQuestionFromHash);
+</script>
+
+<style>
+  .faq-list {
+    margin-top: 4px;
+  }
+
+  .faq-item {
+    scroll-margin-top: calc(var(--nx-header-space) + 16px);
+  }
+
+  .faq-item + .faq-item {
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 20px;
+    border-radius: var(--md-sys-shape-corner-small);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question-text {
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: 500;
+  }
+
+  .faq-icon {
+    flex: 0 0 auto;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized);
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-width: 70ch;
+    padding-bottom: 20px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+  }
+
+  .faq-more {
+    margin-top: 28px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon {
+      transition: none;
+    }
+  }
+</style>
