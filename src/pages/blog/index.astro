@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostTransitionStyles from '../../components/PostTransitionStyles.astro';
+import { postTransitionName } from '../../components/postTransition';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes about NXAevora: the port, the engine and the build."
+>
+  <section class="panel" aria-labelledby="blog-title">
+    <div class="section-head">
+      <h1 class="page-title" id="blog-title">Blog</h1>
+      <a class="text-link" href="/rss.xml" aria-label="RSS feed of the blog">
+        <span class="material-symbols-rounded" aria-hidden="true">rss_feed</span>
+        RSS
+      </a>
+    </div>
+    <p class="page-lede">Notes about the port, the engine and the build.</p>
+
+    {
+      posts.length === 0 ? (
+        <p class="post-empty">No posts yet.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => {
+            const iso = post.data.date.toISOString().slice(0, 10);
+            return (
+              <li>
+                <a
+                  class="post-row"
+                  href={`/blog/${post.id}/`}
+                  style={`view-transition-name: ${postTransitionName(post.id)}`}
+                >
+                  <span class="post-date"><time datetime={iso}>{iso}</time></span>
+                  <span class="post-title">{post.data.title}</span>
+                  <span class="post-excerpt">{post.data.description}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </section>
+  <PostTransitionStyles ids={posts.map((post) => post.id)} />
+</BaseLayout>

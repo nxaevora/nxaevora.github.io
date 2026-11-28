@@ -573,7 +573,8 @@ md-icon-button {
 
 .text-link,
 .faq-question,
-.get-row {
+.get-row,
+.post-row {
   position: relative;
   isolation: isolate;
 }
@@ -600,7 +601,8 @@ md-icon-button {
 
 .text-link::after,
 .faq-question::after,
-.get-row::after {
+.get-row::after,
+.post-row::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -613,19 +615,22 @@ md-icon-button {
 
 .text-link:hover::after,
 .faq-question:hover::after,
-.get-row:hover::after {
+.get-row:hover::after,
+.post-row:hover::after {
   background: var(--nx-state-hover);
 }
 
 .text-link:focus-visible::after,
 .faq-question:focus-visible::after,
-.get-row:focus-visible::after {
+.get-row:focus-visible::after,
+.post-row:focus-visible::after {
   background: var(--nx-state-focus);
 }
 
 .text-link:active::after,
 .faq-question:active::after,
-.get-row:active::after {
+.get-row:active::after,
+.post-row:active::after {
   background: var(--nx-state-pressed);
 }
 
@@ -700,6 +705,67 @@ md-icon-button {
 
 .legal-panel {
   min-width: 0;
+}
+
+.post-list {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.post-list > li {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.post-list > li:last-child {
+  border-bottom: 0;
+}
+
+.post-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding-block: 18px;
+  color: var(--md-sys-color-on-surface);
+  text-decoration: none;
+}
+
+.post-date {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-label-large-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-title {
+  font-size: var(--md-sys-typescale-title-medium-size);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  font-weight: 500;
+}
+
+.post-excerpt {
+  max-width: 70ch;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+}
+
+.post-empty {
+  margin-top: 24px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.post-panel .post-date {
+  display: block;
+  margin-top: 8px;
+}
+
+.back-link {
+  margin-top: 28px;
 }
 
 @view-transition {

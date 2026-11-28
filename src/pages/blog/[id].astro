@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostTransitionStyles from '../../components/PostTransitionStyles.astro';
+import { postTransitionName } from '../../components/postTransition';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const iso = post.data.date.toISOString().slice(0, 10);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} ogType="article">
+  <article
+    class="panel post-panel"
+    aria-labelledby="post-title"
+    style={`view-transition-name: ${postTransitionName(post.id)}`}
+  >
+    <h1 class="page-title" id="post-title">{post.data.title}</h1>
+    <time class="post-date" datetime={iso}>{iso}</time>
+
+    <div class="post-body">
+      <Content />
+    </div>
+
+    <a class="text-link back-link" href="/blog/">
+      <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+      Back to the blog
+    </a>
+  </article>
+  <PostTransitionStyles ids={[post.id]} />
+</BaseLayout>
+
+<style>
+  .post-body {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 68ch;
+    margin-top: 24px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+  }
+
+  .post-body :global(h2) {
+    color: var(--md-sys-color-on-surface);
+    font-size: var(--md-sys-typescale-headline-small-size);
+    line-height: var(--md-sys-typescale-headline-small-line-height);
+    font-weight: 500;
+  }
+
+  .post-body :global(h3) {
+    color: var(--md-sys-color-on-surface);
+    font-size: var(--md-sys-typescale-title-large-size);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    font-weight: 500;
+  }
+
+  .post-body :global(ul),
+  .post-body :global(ol) {
+    padding-left: 24px;
+  }
+
+  .post-body :global(li + li) {
+    margin-top: 4px;
+  }
+
+  .post-body :global(a) {
+    color: var(--md-sys-color-primary);
+    text-underline-offset: 3px;
+  }
+
+  .post-body :global(code) {
+    padding: 2px 6px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+    font-size: 0.9em;
+  }
+
+  .post-body :global(pre) {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background: var(--md-sys-color-surface-container-highest);
+  }
+
+  .post-body :global(pre code) {
+    padding: 0;
+    background: none;
+  }
+
+  .post-body :global(blockquote) {
+    margin: 0;
+    padding-left: 16px;
+    border-left: 3px solid var(--md-sys-color-outline-variant);
+  }
+
+  .post-body :global(hr) {
+    margin: 8px 0;
+    border: 0;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+</style>

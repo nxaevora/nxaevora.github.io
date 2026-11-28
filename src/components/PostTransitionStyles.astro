@@ -1,0 +1,11 @@
+---
+import { postTransitionCss } from './postTransition';
+
+interface Props {
+  ids: readonly string[];
+}
+
+const { ids } = Astro.props;
+---
+
+{ids.length > 0 && <style is:inline set:html={postTransitionCss(ids)}></style>}
