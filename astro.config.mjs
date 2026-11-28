@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://nxaevora.github.io',
+  base: '/website',
   output: 'static',
   trailingSlash: 'always',
   integrations: [sitemap()],

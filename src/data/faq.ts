@@ -1,3 +1,5 @@
+import { withBase } from '../components/withBase';
+
 export type FaqAnswerPart = string | { text: string; href: string };
 
 export interface FaqItem {
@@ -28,7 +30,7 @@ export const faqItems: FaqItem[] = [
     question: 'Which systems are supported?',
     answer: [
       'Windows 11 x64 is the main target. Linux x64 is planned for the beta stage or later. macOS, Android and iOS are not planned. See ',
-      { text: 'Download', href: '/download/' },
+      { text: 'Download', href: withBase('/download/') },
       ' for the requirements.',
     ],
   },
@@ -63,7 +65,7 @@ export const faqItems: FaqItem[] = [
     question: 'Is NXAevora affiliated with Nintendo?',
     answer: [
       'No. NXAevora is an independent project. It is not affiliated with or endorsed by Nintendo, The Pokemon Company or Game Freak. See ',
-      { text: 'Legal', href: '/legal/' },
+      { text: 'Legal', href: withBase('/legal/') },
       '.',
     ],
   },

@@ -1,6 +1,6 @@
-# nxaevora.github.io
+# website
 
-The source of the NXAevora website, published at <https://nxaevora.github.io/>.
+The source of the NXAevora website, published at <https://nxaevora.github.io/website/>.
 
 NXAevora runs Pokémon Legends: Arceus natively on the PC. The project itself lives in
 [nxaevora/nxaevora-main](https://github.com/nxaevora/nxaevora-main). This repository holds only the website.
@@ -17,7 +17,7 @@ NXAevora runs Pokémon Legends: Arceus natively on the PC. The project itself li
 ## Folder structure
 
 ```
-nxaevora.github.io/
+website/
   src/
     pages/          one file for each page of the site
     layouts/        page layouts shared by the pages
@@ -43,7 +43,7 @@ npm run preview
 
 ## Contributing
 
-Found a mistake on the site? Open an [issue](https://github.com/nxaevora/nxaevora.github.io/issues) or send a pull
+Found a mistake on the site? Open an [issue](https://github.com/nxaevora/website/issues) or send a pull
 request. Issues about NXAevora itself belong in the
 [main repository](https://github.com/nxaevora/nxaevora-main/issues).
 

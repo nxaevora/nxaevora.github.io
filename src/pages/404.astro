@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import IconOutline from '../components/IconOutline.astro';
+import { withBase } from '../components/withBase';
 ---
 
 <BaseLayout
@@ -16,11 +17,11 @@ import IconOutline from '../components/IconOutline.astro';
     <p class="not-found-text">The page you are looking for does not exist or has moved.</p>
 
     <div class="not-found-actions">
-      <md-filled-button href="/">
+      <md-filled-button href={withBase('/')}>
         <span class="material-symbols-rounded" slot="icon" aria-hidden="true">home</span>
         Go to Home
       </md-filled-button>
-      <md-text-button href="/faq/">Read the FAQ</md-text-button>
+      <md-text-button href={withBase('/faq/')}>Read the FAQ</md-text-button>
     </div>
   </section>
 </BaseLayout>

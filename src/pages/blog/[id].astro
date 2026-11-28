@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostTransitionStyles from '../../components/PostTransitionStyles.astro';
 import { postTransitionName } from '../../components/postTransition';
+import { withBase } from '../../components/withBase';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -32,7 +33,7 @@ const iso = post.data.date.toISOString().slice(0, 10);
       <Content />
     </div>
 
-    <a class="text-link back-link" href="/blog/">
+    <a class="text-link back-link" href={withBase('/blog/')}>
       <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
       Back to the blog
     </a>

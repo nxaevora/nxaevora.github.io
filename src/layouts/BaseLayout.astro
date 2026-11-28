@@ -5,6 +5,7 @@ import '@fontsource/material-symbols-rounded/400.css';
 import '../styles/global.css';
 import { themeCss } from '../styles/theme';
 import SiteHeader from '../components/SiteHeader.astro';
+import { withBase } from '../components/withBase';
 
 interface Props {
   title: string;
@@ -19,7 +20,7 @@ const siteName = 'NXAevora';
 const pageTitle = title === siteName ? title : `${title} | ${siteName}`;
 const site = Astro.site ?? new URL('https://nxaevora.github.io');
 const canonical = new URL(Astro.url.pathname, site).href;
-const ogImage = new URL('/images/nxaevora-icon.svg', site).href;
+const ogImage = new URL(withBase('/images/nxaevora-icon.svg'), site).href;
 ---
 
 <!doctype html>
@@ -32,8 +33,8 @@ const ogImage = new URL('/images/nxaevora-icon.svg', site).href;
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/images/nxaevora-icon.svg" type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title="NXAevora blog" href="/rss.xml" />
+    <link rel="icon" href={withBase('/images/nxaevora-icon.svg')} type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="NXAevora blog" href={withBase('/rss.xml')} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={pageTitle} />

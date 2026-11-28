@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../components/withBase';
 ---
 
 <BaseLayout
@@ -95,7 +96,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="panel legal-panel" aria-labelledby="legal-title">
     <h2 id="legal-title">Legal notes</h2>
     <p class="section-note">You must own the game to use NXAevora. NXAevora does not give game files.</p>
-    <a class="text-link legal-link" href="/legal/">Legal</a>
+    <a class="text-link legal-link" href={withBase('/legal/')}>Legal</a>
   </section>
 </BaseLayout>
 
